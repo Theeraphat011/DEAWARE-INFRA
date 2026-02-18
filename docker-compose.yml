@@ -1,0 +1,144 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - default
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: redis-server --appendonly yes 
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD}", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis-insight
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${REDIS_INSIGHT_PORT}:5540"
+    volumes:
+      - ./data/redisinsight:/data
+    depends_on:
+      - redis
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:5540 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  seaweed-master:
+    image: chrislusf/seaweedfs:latest
+    container_name: seaweed-master
+    command: master
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:9333 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  seaweed-volume:
+    image: chrislusf/seaweedfs:latest
+    container_name: seaweed-volume
+    command: volume -mserver=seaweed-master:9333 -dir=/data -max=5
+    depends_on:
+      - seaweed-master
+    volumes:
+      - ./data/seaweed:/data
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  seaweed-filer:
+    image: chrislusf/seaweedfs:latest
+    container_name: seaweed-filer
+    command: filer -master=seaweed-master:9333
+    depends_on:
+      - seaweed-master
+      - seaweed-volume
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8888 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    restart: unless-stopped
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_PROXY: edge
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_RELATIVE_PATH: /auth
+    command: start-dev
+    ports:
+      - "${KEYCLOAK_PORT}:8080"
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/auth/realms/master || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+networks:
+  default:
+    external: true
+    name: ${DOCKER_NETWORK}
