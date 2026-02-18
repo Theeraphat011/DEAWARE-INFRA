@@ -40,7 +40,7 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    command: redis-server --appendonly yes 
+    command: redis-server --appendonly yes
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
@@ -125,6 +125,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_PROXY: edge
       KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
       KC_HTTP_RELATIVE_PATH: /auth
     command: start-dev
     ports:
