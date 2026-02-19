@@ -118,6 +118,8 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./keycloak/themes:/opt/keycloak/themes
     container_name: keycloak
     restart: unless-stopped
     environment:
