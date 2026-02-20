@@ -105,6 +105,8 @@ services:
     image: chrislusf/seaweedfs:latest
     container_name: seaweed-filer
     command: filer -master=seaweed-master:9333
+    ports:
+      - "8889:8888"
     depends_on:
       - seaweed-master
       - seaweed-volume
@@ -124,9 +126,12 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_PROXY: edge
+      KC_PROXY_HEADERS: xforwarded
       KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
       KC_HTTP_ENABLED: true
       KC_HTTP_RELATIVE_PATH: /auth
+      KC_HOSTNAME_PORT: ${KEYCLOAK_PORT:-8081}
     command: start-dev
     ports:
       - "${KEYCLOAK_PORT}:8080"
