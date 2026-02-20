@@ -1,94 +1,454 @@
-body {
-  background: #ffffff;
-  font-family: "Segoe UI", sans-serif;
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Layout */
+html, body {
+  height: 100%;
+  width: 100%;
+}
 
+body {
+  background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  overflow: hidden;
+}
+
+/* ARROW LOOP ANIMATION */
+.arrow-loop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 100vh;
+  background: url("../img/5800486.png") repeat-y;
+  background-size: contain;
+  opacity: 0.1;
+  animation: scrollArrow 5s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes scrollArrow {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 600px;
+  }
+}
+
+/* MAIN LAYOUT */
 .deaware-container {
   display: flex;
   height: 100vh;
+  animation: fadeIn 0.8s ease-out;
+  position: relative;
+  z-index: 2;
 }
 
-/* LEFT SIDE */
-
+/* LEFT SECTION */
 .left {
   flex: 1;
-  background: linear-gradient(135deg, #ffffff 60%, #ffe6ea 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #fff5f7 50%, #ffe6ea 100%);
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 80px;
+  padding: 80px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.left::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(229, 57, 88, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.left-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.left-content .logo {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 30px;
+  animation: slideDown 0.6s ease-out;
 }
 
 .left h1 {
-  font-size: 20px;
-  letter-spacing: 2px;
-  color: #333;
+  font-size: 48px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
 }
 
 .tagline {
-  font-size: 42px;
+  font-size: 18px;
   font-weight: 300;
   color: #e53958;
+  line-height: 1.6;
   margin-top: 20px;
-  line-height: 1.2;
 }
 
-/* RIGHT SIDE */
-
+/* RIGHT SECTION */
 .right {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #f9f9f9;
+  padding: 40px 20px;
 }
 
 /* LOGIN CARD */
-
 .login-card {
-  width: 340px;
-  padding: 40px;
-  border-radius: 14px;
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-}
-
-.login-card h2 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-/* INPUT */
-
-.login-card input {
   width: 100%;
-  padding: 14px;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  max-width: 400px;
+  padding: 48px 40px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.6s ease-out;
+}
+
+.card-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.card-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.card-header p {
+  color: #666;
   font-size: 14px;
 }
 
-.login-card input:focus {
+/* FORM */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.form-group input:focus {
   outline: none;
   border-color: #e53958;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(229, 57, 88, 0.1);
 }
 
-/* BUTTON */
+.form-group input:hover {
+  border-color: #d0d0d0;
+}
 
-.login-card button {
+/* CHECKBOX */
+.form-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 8px;
+}
+
+.form-check input[type=\"checkbox\"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #e53958;
+}
+
+.form-check label {
+  margin: 0;
+  cursor: pointer;
+  font-weight: 500;
+  text-transform: initial;
+  letter-spacing: initial;
+  color: #333;
+}
+
+/* BUTTONS */
+.btn-login,
+.btn-logout {
   width: 100%;
-  padding: 14px;
-  border-radius: 8px;
+  padding: 12px 16px;
   border: none;
+  border-radius: 8px;
   background: #e53958;
   color: white;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
 }
 
-.login-card button:hover {
-  background: #c62845;
+.btn-login:hover,
+.btn-logout:hover {
+  background: #d12e47;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(229, 57, 88, 0.3);
+}
+
+.btn-login:active,
+.btn-logout:active {
+  transform: translateY(0);
+}
+
+.btn-cancel {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 16px;
+  text-align: center;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: transparent;
+  color: #333;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+.btn-cancel:hover {
+  background: #f5f5f5;
+  border-color: #999;
+}
+
+/* LOGOUT FORM */
+.logout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.logout-message {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* FORM FOOTER */
+.form-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.form-footer p {
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #666;
+}
+
+.form-footer a {
+  color: #e53958;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.form-footer a:hover {
+  color: #d12e47;
+  text-decoration: underline;
+}
+
+/* ALERTS */
+.alert {
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  animation: slideDown 0.4s ease-out;
+}
+
+.alert-error {
+  background: #ffe6e6;
+  border: 1px solid #ffcccc;
+  color: #c41e3a;
+}
+
+.alert-warning {
+  background: #fff4e6;
+  border: 1px solid #ffe0cc;
+  color: #cc8800;
+}
+
+.alert-success {
+  background: #e6ffe6;
+  border: 1px solid #ccffcc;
+  color: #00aa00;
+}
+
+.alert-info {
+  background: #e6f0ff;
+  border: 1px solid #cce0ff;
+  color: #0066cc;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+  .deaware-container {
+    flex-direction: column;
+  }
+
+  .left {
+    flex: 0.5;
+    padding: 40px 20px;
+  }
+
+  .left h1 {
+    font-size: 36px;
+  }
+
+  .tagline {
+    font-size: 16px;
+  }
+
+  .right {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .left {
+    min-height: 30vh;
+  }
+
+  .left h1 {
+    font-size: 28px;
+  }
+
+  .left-content .logo {
+    max-width: 100px;
+  }
+
+  .login-card {
+    padding: 32px 24px;
+  }
+
+  .card-header h2 {
+    font-size: 22px;
+  }
+
+  .arrow-loop {
+    opacity: 0.05;
+  }
+}
+
+@media (max-width: 480px) {
+  .deaware-container {
+    overflow-y: auto;
+  }
+
+  .left {
+    min-height: auto;
+    padding: 30px 20px;
+  }
+
+  .left h1 {
+    font-size: 24px;
+  }
+
+  .tagline {
+    font-size: 14px;
+  }
+
+  .login-card {
+    padding: 24px 20px;
+  }
+
+  .card-header h2 {
+    font-size: 20px;
+  }
+
+  .form-group input {
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+
+  .btn-login,
+  .btn-logout,
+  .btn-cancel {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
 }
