@@ -2,14 +2,14 @@
 <@layout.registrationLayout; section>
 
 <#if section = "header">
-<#elseif section = "form">
 
+<#elseif section = "form">
 <div class="deaware-container">
 
   <div class="left">
     <div class="left-content">
       <h1>DEAWARE AI</h1>
-      <p class="tagline">See you soon!</p>
+        <p class="tagline">Attendance & Face<br/>Recognition System</p>
     </div>
   </div>
 
@@ -17,15 +17,17 @@
     <div class="login-card">
 
       <div class="card-header">
-        <h2>Confirm Logout</h2>
+        <h2>ออกจากระบบ</h2>
       </div>
 
-      <p class="logout-message">Are you sure you want to log out?</p>
+      <p class="logout-message">ต้องการออกจากระบบหรือไม่?</p>
 
-      <form action="${url.logoutConfirmAction}" method="post" class="logout-form">
-        <button type="submit" class="btn-logout">Yes, Logout</button>
-        <a href="${url.loginUrl}" class="btn-cancel">Cancel</a>
-      </form>
+<form action="${url.logoutConfirmAction}" method="post" class="logout-form">
+  
+  <button type="submit" class="btn-logout">ยืนยัน</button>
+  <button type="button" class="btn-cancel" onclick="location.href='${url.loginUrl}'">ยกเลิก</button>
+
+</form>
 
     </div>
   </div>

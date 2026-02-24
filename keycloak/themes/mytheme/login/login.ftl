@@ -17,7 +17,7 @@
     <div class="login-card">
 
       <div class="card-header">
-        <h2>Sign in to your account</h2>
+        <h2>เข้าสู่ระบบ</h2>
       </div>
 
       <#if message?has_content>
@@ -28,13 +28,15 @@
 
       <form id="kc-form-login" action="${url.loginAction}" method="post">
 
+        <input type="hidden" id="id-hidden-input" name="credentialId" <#if auth.selectedCredential?has_content>value="${auth.selectedCredential}"</#if> />
+
         <div class="form-group">
-          <label for="username">Username or Email</label>
+          <label for="username">ชื่อผู้ใช้หรืออีเมล</label>
           <input 
             type="text" 
             id="username"
             name="username" 
-            placeholder="Enter your username" 
+            placeholder="ป้อนชื่อผู้ใช้ของคุณ" 
             autofocus
             required
             value="${login.username!''}"
@@ -42,12 +44,12 @@
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">รหัสผ่าน</label>
           <input 
             type="password" 
             id="password"
             name="password" 
-            placeholder="Enter your password"
+            placeholder="ป้อนรหัสผ่านของคุณ"
             required
           />
         </div>
@@ -60,19 +62,21 @@
               name="rememberMe"
               <#if login.rememberMe??>checked</#if>
             >
-            <label for="rememberMe">Remember me</label>
+            <label for="rememberMe">จดจำฉัน</label>
           </div>
         </#if>
 
-        <button type="submit" class="btn-login">Sign in</button>
+        <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
+
+        <input type="hidden" name="client_id" value="${client.clientId}">
 
       </form>
 
       <#if realm.password && realm.registrationAllowed>
         <div class="form-footer">
-          <p>Don't have an account? <a href="${url.registrationUrl}">Register here</a></p>
+          <p>ยังไม่มีบัญชี? <a href="${url.registrationUrl}">ลงทะเบียนที่นี่</a></p>
           <#if realm.resetPasswordAllowed>
-            <p><a href="${url.loginResetCredentialsUrl}">Forgot your password?</a></p>
+            <p><a href="${url.loginResetCredentialsUrl}">ลืมรหัสผ่านของคุณหรือ</a></p>
           </#if>
         </div>
       </#if>
