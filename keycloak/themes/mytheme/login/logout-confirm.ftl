@@ -22,10 +22,15 @@
 
       <p class="logout-message">ต้องการออกจากระบบหรือไม่?</p>
 
-<form action="${url.logoutConfirmAction}" method="post" class="logout-form">
-  
-  <button type="submit" class="btn-logout">ยืนยัน</button>
-  <button type="button" class="btn-cancel" onclick="location.href='${url.loginUrl}'">ยกเลิก</button>
+<form action="${url.logoutConfirmAction}" method="post" class="logout-form" onsubmit="confirmLogout.disabled = true; return true;">
+  <input type="hidden" name="session_code" value="${logoutConfirm.code}">
+
+  <button type="submit" name="confirmLogout" id="kc-logout" class="btn-logout">ยืนยัน</button>
+  <#if client?? && client.baseUrl?has_content>
+  <button type="button" class="btn-cancel" onclick="location.href='${client.baseUrl}'">ยกเลิก</button>
+  <#else>
+  <button type="button" class="btn-cancel" onclick="history.back()">ยกเลิก</button>
+  </#if>
 
 </form>
 
