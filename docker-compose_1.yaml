@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # 1. ตั้งค่าการติดตั้ง PostgreSQL พร้อมรองรับ pgvector
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: postgres_vector_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin           # กำหนดชื่อผู้ใช้งาน
+      POSTGRES_PASSWORD: password123 # กำหนดรหัสผ่าน
+      POSTGRES_DB: attendance_db     # กำหนดชื่อฐานข้อมูลเริ่มต้น
+    ports:
+      - "5432:5432" # แมปพอร์ตใช้งาน
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # ผูก Volume เพื่อป้องกันข้อมูลสูญหาย
+
+  # 2. ตั้งค่าการติดตั้ง SeaweedFS (รวม Master และ Volume ใน Service เดียว)
+  seaweedfs:
+    image: chrislusf/seaweedfs
+    container_name: seaweedfs_server
+    restart: always
+    ports:
+      - "9333:9333"   # พอร์ตสำหรับ Master API
+      - "19333:19333" # พอร์ตสำหรับ Master gRPC
+      - "8080:8080"   # พอร์ตสำหรับ Volume API (อัปโหลด/ดาวน์โหลดไฟล์)
+      - "18080:18080" # พอร์ตสำหรับ Volume gRPC
+    # ใช้คำสั่ง server เพื่อรันทั้ง Master และ Volume ไปพร้อมกัน
+    command: "server -dir=/data -ip=seaweedfs"
+    volumes:
+      - seaweedfs_data:/data
+
+volumes:
+  postgres_data:
+  seaweedfs_data:

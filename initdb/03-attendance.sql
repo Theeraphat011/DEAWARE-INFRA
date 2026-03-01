@@ -16,3 +16,16 @@ CREATE TABLE
 	);
 
 CREATE INDEX IF NOT EXISTS idx_attendances_employee_id ON dat.attendances (employee_id);
+
+-- Create table for mapping attendance images (1 attendance : many images)
+CREATE TABLE
+	IF NOT EXISTS dat.attendance_images (
+		id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+		attendance_id UUID NOT NULL,
+		image_url TEXT NOT NULL,
+		image_type VARCHAR(20) NOT NULL CHECK (image_type IN ('check_in', 'check_out')),
+		captured_at TIMESTAMPTZ,
+		CONSTRAINT fk_attendance_image_attendance FOREIGN KEY (attendance_id) REFERENCES dat.attendances (id) ON DELETE CASCADE
+	);
+
+CREATE INDEX IF NOT EXISTS idx_attendance_images_attendance_id ON dat.attendance_images (attendance_id);

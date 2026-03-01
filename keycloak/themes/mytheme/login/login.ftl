@@ -24,6 +24,7 @@
         <div class="alert alert-${message.type}">
           <span>${message.summary}</span>
         </div>
+        
       </#if>
 
       <form id="kc-form-login" action="${url.loginAction}" method="post">

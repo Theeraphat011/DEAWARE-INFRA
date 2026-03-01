@@ -12,3 +12,8 @@ CREATE TABLE
 	);
 
 CREATE INDEX IF NOT EXISTS idx_face_embeddings_employee_id ON dat.face_embeddings (employee_id);
+
+-- HNSW index for fast approximate nearest-neighbor search on embedding column
+CREATE INDEX IF NOT EXISTS idx_face_embeddings_embedding_hnsw ON dat.face_embeddings USING hnsw (embedding vector_cosine_ops)
+WITH
+	(m = 16, ef_construction = 64);
